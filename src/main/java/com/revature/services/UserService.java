@@ -30,32 +30,25 @@ public class UserService {
 
     //This method inserts new Users into the DB
     public User registerUser(String firstName, String lastName, String username, String password, String role){
-        System.out.println("Pos 1");
         User newUser = new User(0, firstName, lastName, username, password, role);
         //TODO: Check that the username is unique (get user by username, see if it's null)
-        System.out.println("Pos 2");
         User u = uDAO.findByUsername(newUser.getUsername());
-        System.out.println("Pos 3");
         //User u = findByUsername(newUser.getUsername());
         //If u is not null, throw an exception because the username already exists
-        if(u.getUsername() != null){
-            System.out.println("Error 1");
+        if(u != null){
             //It will be the Controller's job to handle this
             throw new IllegalArgumentException("Username already exists!");
         }
         //Make sure the username is present in the new User (TODO: password too)
         if(newUser.getUsername() == null || newUser.getUsername().isBlank()) {
-            System.out.println("Error 2");
             //It will be the Controller's job to handle this
             throw new IllegalArgumentException("Username cannot be empty!");
         }
 
         if(newUser.getPassword() == null || newUser.getPassword().isBlank()){
-            System.out.println("Error 3");
             //It will be the Controller's job to handle this
             throw new IllegalArgumentException("Password cannot be empty!");
         }
-        System.out.println("Pos 4");
         //.save() is the JPA method to insert data into the DB. We can also use this for updates
         //It also returns the saved object, so we can just return the method call. Convenient!
         return uDAO.save(newUser);

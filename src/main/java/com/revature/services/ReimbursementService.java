@@ -27,7 +27,7 @@ public class ReimbursementService {
     }
 
     //This method takes in a new Reimbursement object and inserts it into the DB
-    public Reimbursement addReimbursement(String description, int amount, String status, int attachUserId) {
+    public Reimbursement addReimbursement(String description, int amount, int attachUserId) {
 
         //Another important role of the Service layer: data processing -
         //Turn the ReimbursementDTO into a Reimbursement to send to the DAO (DAO takes Reimbursement objects, not ReimbursementDTOs)
@@ -35,7 +35,7 @@ public class ReimbursementService {
         //reimbursementId will be generated (so 0 is just a placeholder)
         //species and name come from the DTO
         //user will be set with the userId in the DTO
-        Reimbursement newReimbursement = new Reimbursement(description, amount, status, null);
+        Reimbursement newReimbursement = new Reimbursement(description, amount, null);
 
         //Use the UserDAO to get a User by id
         Optional<User> u = uDAO.findById(attachUserId);

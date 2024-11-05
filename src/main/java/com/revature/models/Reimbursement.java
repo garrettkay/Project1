@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 @Entity //This Class will be a DB table thanks to Spring Data JPA
-@Table(schema="P1",name = "reimbursements") //This lets us change the name of our DB table
+@Table(schema="project1",name = "reimbursements") //This lets us change the name of our DB table
 @Component //1 of 4 stereotype annotations. Registers this class as a Spring Bean
 public class Reimbursement {
 
@@ -40,10 +40,10 @@ public class Reimbursement {
     public Reimbursement() {
     }
 
-    public Reimbursement(String description, int amount, String status, User user) {
+    public Reimbursement(String description, int amount, User user) {
         this.description = description;
         this.amount = amount;
-        this.status = status;
+        this.status = "pending";
         this.user = user;
     }
 

@@ -23,10 +23,10 @@ public class ReimbursementController {
 
     //A method that inserts a new Reimbursement into the DB
     @PostMapping //POST requests to /reimbursements will come here
-    public ResponseEntity<Reimbursement> insertReimbursement(@RequestParam("description") String description,@RequestParam("amount") int amount,@RequestParam("status") String status,@RequestParam("userid") int userid){
+    public ResponseEntity<Reimbursement> insertReimbursement(@RequestParam("description") String description,@RequestParam("amount") int amount,@RequestParam("userid") int userid){
         //send the Reimbursement data to the service, and save the result in a Reimbursement object
 
-        Reimbursement p = reimbursementService.addReimbursement(description,amount,status,userid);
+        Reimbursement p = reimbursementService.addReimbursement(description,amount,userid);
 
         //send the new Reimbursement data back to the client with 201 - CREATED
         return ResponseEntity.status(201).body(p);
