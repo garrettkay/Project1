@@ -27,7 +27,7 @@ public class ReimbursementService {
     }
 
     //This method takes in a new Reimbursement object and inserts it into the DB
-    public Reimbursement addReimbursement(String description, int amount, int attachUserId) {
+    public Reimbursement addReimbursement(String description, int amount, String username) {
 
         //Another important role of the Service layer: data processing -
         //Turn the ReimbursementDTO into a Reimbursement to send to the DAO (DAO takes Reimbursement objects, not ReimbursementDTOs)
@@ -38,18 +38,17 @@ public class ReimbursementService {
         Reimbursement newReimbursement = new Reimbursement(description, amount, null);
 
         //Use the UserDAO to get a User by id
-        Optional<User> u = uDAO.findById(attachUserId);
+        Optional<User> u = Optional.ofNullable(uDAO.findByUsername(username).getFirst());
 
         /*findById returns an OPTIONAL... What does that mean?
          it will either hold the value requested, or it won't. This helps us avoid NullPointerExc.
          BECAUSE... we can't access the data if we don't use the .get() method
          Check out how it helps us write error handling functionality: */
         if (u.isEmpty()) {
-            throw new IllegalArgumentException("No user found with id: " + newReimbursement.getReimbursementId());
+            throw new IllegalArgumentException("No user found with username: " + newReimbursement.getUser().getUsername());
         } else {
             //set the user object in the new Reimbursement
             newReimbursement.setUser(u.get()); //.get() is what extracts the value from the Optional
-
             //send the Reimbursement to the DAO
             return rDAO.save(newReimbursement);
         }
@@ -74,29 +73,28 @@ public class ReimbursementService {
 
 
 
-    public List<Reimbursement> getUserReimbursements(int userid) {
-        Optional<User> u = uDAO.findById(userid);
+    public List<Reimbursement> getUserReimbursements(String username) {
+        Optional<User> u = Optional.ofNullable(uDAO.findByUsername(username).getFirst());
         if (u.isEmpty()) {
-            throw new IllegalArgumentException("No user found with id: " + userid);
+            throw new IllegalArgumentException("No user found with username: " + username);
         } else {
-
             return rDAO.findByUser(u.get());
         }
     }
-    public List<Reimbursement> getPendingUserReimbursements(int userid) {
-        Optional<User> u = uDAO.findById(userid);
+    public List<Reimbursement> getPendingUserReimbursements(String username) {
+        Optional<User> u = Optional.ofNullable(uDAO.findByUsername(username).getFirst());
         if (u.isEmpty()) {
-            throw new IllegalArgumentException("No user found with id: " + userid);
+            throw new IllegalArgumentException("No user found with username: " + username);
         } else {
 
             return rDAO.findByUserAndStatus(u.get(),"pending");
         }
     }
 
-    public int getTotalPendingAmount(int userid) {
-        Optional<User> u = uDAO.findById(userid);
+    public int getTotalPendingAmount(String username) {
+        Optional<User> u = Optional.ofNullable(uDAO.findByUsername(username).getFirst());
         if (u.isEmpty()) {
-            throw new IllegalArgumentException("No user found with id: " + userid);
+            throw new IllegalArgumentException("No user found with id: " + username);
         } else {
 
             List<Reimbursement> pendingReimbursements = rDAO.findByUserAndStatus(u.get(),"pending");

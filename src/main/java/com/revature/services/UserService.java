@@ -32,10 +32,9 @@ public class UserService {
     public User registerUser(String firstName, String lastName, String username, String password, String role){
         User newUser = new User(0, firstName, lastName, username, password, role);
         //TODO: Check that the username is unique (get user by username, see if it's null)
-        User u = uDAO.findByUsername(newUser.getUsername());
         //User u = findByUsername(newUser.getUsername());
         //If u is not null, throw an exception because the username already exists
-        if(u != null){
+        if(!uDAO.findByUsername(newUser.getUsername()).isEmpty()){
             //It will be the Controller's job to handle this
             throw new IllegalArgumentException("Username already exists!");
         }
@@ -65,7 +64,7 @@ public class UserService {
     }
 
     //This method gets a user by username
-    public User getUserByUsername(String username){
+    public List<User> getUserByUsername(String username){
 
         //a little error handling
         if(username == null || username.isBlank()){
@@ -77,6 +76,19 @@ public class UserService {
 
         //findByUsername is a method WE DEFINED in the UserDAO (but didn't have to implement!)
         return uDAO.findByUsername(username);
+    }
+    public List<User> getUserByUsernameStartingWith(String username){
+
+        //a little error handling
+        if(username == null || username.isBlank()){
+            return uDAO.findAll();
+        }
+
+        //TODO: we could check if the returned user is null and throw an exception
+        //if(userDAO.findByUsername(username) == null){throw Exp}
+
+        //findByUsername is a method WE DEFINED in the UserDAO (but didn't have to implement!)
+        return uDAO.findByUsernameStartingWith(username);
     }
     //This method gets all users from the DB
     public List<User> getAllUsers(){

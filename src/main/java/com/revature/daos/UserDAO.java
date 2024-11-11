@@ -23,7 +23,9 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     List<User> findByFirstNameAndLastName(String firstName, String lastName);
 
-    User findByUsername(String username);
+    List<User> findByUsername(String username);
+
+    List<User> findByUsernameStartingWith(String username);
 
     List<User> findByRole(String role);
 
